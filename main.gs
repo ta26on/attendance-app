@@ -1,3 +1,7 @@
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+
 function getSpreadsheet()
 {
     return SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
@@ -90,10 +94,7 @@ function getEntry(n)
     });            
     entry.members.push({name: member_name, response: member_response } );
   }); 
-  
-  var content = createTableContent(entry);
-
-  return content;
+  return entry;
 }
                   
 
