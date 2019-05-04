@@ -8,16 +8,24 @@
 
 <body>
   <?!= include('JavaScript'); ?>
+  <h1 id='title' class="display-1"></h1>
+  <div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="check_ok_only">
+  <label class="form-check-label" for="check_ok_only">
+    ○のみ
+  </label>
+</div>
+
   
   <table id='table' class = 'table table_sm'></table>
  
-    <button class = 'btn btn-primary'onclick="doAction(0);">button 0</button>
-    <button class = 'btn btn-primary'onclick="doAction(1);">button 1</button>
-    <button class = 'btn btn-primary'onclick="doAction(2);">button 2</button>
-    <button class = 'btn btn-primary'onclick="doAction(3);">button 3</button>
-    <button class = 'btn btn-primary'onclick="doAction(4);">button 4</button>
-    <button class = 'btn btn-primary'onclick="doAction(5);">button 5</button>
-    <button class = 'btn btn-primary'onclick="doAction(6);">button 6</button>
-    <button class = 'btn btn-primary'onclick="doAction(7);">button 7</button>
+    <button id= 'btn0' class = 'btn btn-primary'onclick="doAction(0);">button 0</button>
+    <button id= 'btn1' class = 'btn btn-primary'onclick="doAction(1);">button 1</button>
+    <button id= 'btn2' class = 'btn btn-primary'onclick="doAction(2);">button 2</button>
+    <button id= 'btn3' class = 'btn btn-primary'onclick="doAction(3);">button 3</button>
+    <button id= 'btn4' class = 'btn btn-primary'onclick="doAction(4);">button 4</button>
+    <button id= 'btn5' class = 'btn btn-primary'onclick="doAction(5);">button 5</button>
+    <button id= 'btn6' class = 'btn btn-primary'onclick="doAction(6);">button 6</button>
+    <button id= 'btn7' class = 'btn btn-primary'onclick="doAction(7);">button 7</button>
 </body>    
 </html>

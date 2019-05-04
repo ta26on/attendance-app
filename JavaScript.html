@@ -13,19 +13,25 @@
     
     function onSuccess(res)
     {
-       createTableContent(res);
+       updateContent(res);
     }
     
-    function createTableContent(entry)
+    function updateContent(entry)
     {
+       $('#title').html(entry['date'] + ': ' + entry['name']);
+       
+       const is_ok = $('#check_ok_only').prop("checked");
+
        var list = $('#table');
        list.empty();
        
        entry.members.forEach(function(member){
+         if (!is_ok || member['response'].match(/○/)){
          list.append('<tr>'
          +'<td>'+ member['name'] +'</td>'
          +'<td>'+ member['response'] +'</td>'
          +'</tr>');
+         }
        });
 }
 </script>

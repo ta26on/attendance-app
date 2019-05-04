@@ -21,18 +21,6 @@ function doGet(e)
   return temp.evaluate().setTitle('Fetch');
 }
 
-function createTableContent(entry)
-{
-  var ret='';
-  entry.members.forEach(function(member){
-    ret += '<tr>';
-    ret += '<td>'+ member['name'] +'</td>';
-    ret += '<td>'+ member['response'] +'</td>';
-    ret += '</tr>';
-  });
-  return ret;
-}
-
 function getEntry(n)
 {  
   var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
@@ -78,7 +66,6 @@ function getEntry(n)
         member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
     });  
   });
-
 
   var entry = entries[n];
   entry.members = [];
