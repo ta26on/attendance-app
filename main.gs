@@ -9,7 +9,96 @@ function getSheetByName(ss, name)
   return ss.getSheetByName(name);
 }
 
-function doGet(e) 
+function doGet(e)
+{
+  var temp = HtmlService.createTemplateFromFile('entry');
+  temp.title = 'fetch';
+  temp.msg = 'hello world';
+  return temp.evaluate().setTitle('Fetch');
+}
+
+function createTableContent(entry)
+{
+  var ret='';
+  entry.members.forEach(function(member){
+    ret += '<tr>';
+    ret += '<td>'+ member['name'] +'</td>';
+    ret += '<td>'+ member['response'] +'</td>';
+    ret += '</tr>';
+  });
+  return ret;
+}
+
+function getEntry(n)
+{  
+  var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
+  var sheet = ss.getSheetByName('鳴り物');
+  //Logger.log(sheet.getName());
+
+  var range = sheet.getRange('A7:A37');
+  var num_rows = range.getNumRows();
+  
+  var members = [];
+    
+  for ( var i =0; i < num_rows; ++i )
+  {
+    member = {};
+    name = range.getValues()[i][0];
+    if (name == ''){ continue; }
+    member['name'] = name;
+    member['row'] = range.getRowIndex() + i; 
+    members.push(member);
+  }
+  
+  
+  var entries =[];
+  
+  var entries_range = sheet.getRange('D2:K4');
+  var entries_num = entries_range.getNumColumns();
+  for ( var i = 0; i < entries_num; ++i )
+  {
+    var entry = {};
+    entry['name'] = entries_range.getValues()[2][i];
+    entry['column'] = entries_range.getColumn() + i;
+    entry['date'] = entries_range.getValues()[0][i]
+    entries.push(entry);
+  }
+  Logger.log(entries);
+  
+  
+  members.forEach(function(member){
+    member['attendances'] = [];
+      entries.forEach(function(entry){
+        var r = member['row'];
+        var c = entry['column'];      
+        member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
+    });  
+  });
+
+
+  var entry = entries[n];
+  entry.members = [];
+  members.forEach(function(member){
+    var member_name = member['name'];
+    var member_response;
+                
+    member['attendances'].forEach(function(attendance){
+      if ( attendance['entry_name'] == entry['name'] )             
+      {    
+        member_response = attendance['response'];                      
+      }
+    });            
+    entry.members.push({name: member_name, response: member_response } );
+  }); 
+  
+  var content = createTableContent(entry);
+
+  return content;
+}
+                  
+
+
+function doGet_old(e) 
 {
   var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
   var sheet = ss.getSheetByName('鳴り物');
