@@ -1,5 +1,5 @@
 function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+    return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
 function getSpreadsheet()
@@ -10,176 +10,130 @@ function getSpreadsheet()
 function getSheetByName(ss, name)
 
 {
-  return ss.getSheetByName(name);
+    return ss.getSheetByName(name);
 }
 
 function doGet(e)
 {
-  var temp = HtmlService.createTemplateFromFile('entry');
-  temp.title = 'fetch';
-  temp.msg = 'hello world';
-  return temp.evaluate().setTitle('Fetch');
+    var page = 'entry';
+    if (e.parameter['member'] != ''){ page = 'member';}
+    Logger.log(e);
+    return HtmlService.createTemplateFromFile(page).evaluate();
+}
+
+function test_getMember()
+{
+  getMember(0);
+}
+                       
+
+function getMember(n)
+{
+    Logger.log('getMember');
+    var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
+    var sheet = ss.getSheetByName('鳴り物');
+    Logger.log(sheet.getName());
+    
+    var range = sheet.getRange('A7:A37');
+    var num_rows = range.getNumRows();
+    
+    var members = [];
+    
+    for ( var i =0; i < num_rows; ++i )
+    {
+        name = range.getValues()[i][0];
+        if (name == ''){ continue; }
+        members.push({ name: name, row: (range.getRowIndex() + i) });
+    }
+//    Logger.log(members);
+  
+    var entries = [];
+    
+    var entries_range = sheet.getRange('D2:K4');
+    var entries_num = entries_range.getNumColumns();
+    for ( var i = 0; i < entries_num; ++i )
+    {
+        var entry = {};
+        entry['name'] = entries_range.getValues()[2][i];
+        entry['column'] = entries_range.getColumn() + i;
+        entry['date'] = entries_range.getValues()[0][i]
+        entries.push(entry);
+    }
+//    Logger.log("entries");
+//    Logger.log(entries);
+    
+    var target_member = members[n];
+
+    target_member['attendances'] = [];
+      Logger.log('aaa');
+    entries.forEach(function(entry){
+        var r = target_member['row'];
+        var c = entry['column'];      
+        target_member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
+    });  
+    
+    return target_member;
 }
 
 function getEntry(n)
 {  
-  var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-  var sheet = ss.getSheetByName('鳴り物');
-  //Logger.log(sheet.getName());
-
-  var range = sheet.getRange('A7:A37');
-  var num_rows = range.getNumRows();
-  
-  var members = [];
+    var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
+    var sheet = ss.getSheetByName('鳴り物');
+    //Logger.log(sheet.getName());
     
-  for ( var i =0; i < num_rows; ++i )
-  {
-    member = {};
-    name = range.getValues()[i][0];
-    if (name == ''){ continue; }
-    member['name'] = name;
-    member['row'] = range.getRowIndex() + i; 
-    members.push(member);
-  }
-  
-  
-  var entries =[];
-  
-  var entries_range = sheet.getRange('D2:K4');
-  var entries_num = entries_range.getNumColumns();
-  for ( var i = 0; i < entries_num; ++i )
-  {
-    var entry = {};
-    entry['name'] = entries_range.getValues()[2][i];
-    entry['column'] = entries_range.getColumn() + i;
-    entry['date'] = entries_range.getValues()[0][i]
-    entries.push(entry);
-  }
-  Logger.log(entries);
-  
-  
-  members.forEach(function(member){
-    member['attendances'] = [];
-      entries.forEach(function(entry){
-        var r = member['row'];
-        var c = entry['column'];      
-        member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
-    });  
-  });
-
-  var entry = entries[n];
-  entry.members = [];
-  members.forEach(function(member){
-    var member_name = member['name'];
-    var member_response;
-                
-    member['attendances'].forEach(function(attendance){
-      if ( attendance['entry_name'] == entry['name'] )             
-      {    
-        member_response = attendance['response'];                      
-      }
-    });            
-    entry.members.push({name: member_name, response: member_response } );
-  }); 
-  return entry;
-}
-                  
-
-
-function doGet_old(e) 
-{
-  var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-  var sheet = ss.getSheetByName('鳴り物');
-    Logger.log(sheet.getName());
-
-  var range = sheet.getRange('A7:A37');
-  var num_rows = range.getNumRows();
-  
-  members = [];
-  
-  Logger.log(range.getValue());
-  Logger.log(range.getRowIndex());
-    Logger.log(range.getRow());
-
+    var range = sheet.getRange('A7:A37');
+    var num_rows = range.getNumRows();
     
-  for ( var i =0; i < num_rows; ++i )
-  {
-    member = {};
-    name = range.getValues()[i][0];
-    if (name == ''){ continue; }
-    member['name'] = name;
-    member['row'] = range.getRowIndex() + i; 
-    members.push(member);
-  }
-  
-  
-  var entries =[];
-  
-  var entries_range = sheet.getRange('D2:K4');
-  var entries_num = entries_range.getNumColumns();
-  for ( var i = 0; i < entries_num; ++i )
-  {
-    var entry = {};
-    entry['name'] = entries_range.getValues()[2][i];
-    entry['column'] = entries_range.getColumn() + i;
-    entry['date'] = entries_range.getValues()[0][i]
-    entries.push(entry);
-  }
-  Logger.log(entries);
-  
-  
-  members.forEach(function(member){
-    member['attendances'] = [];
-      entries.forEach(function(entry){
-        var r = member['row'];
-        var c = entry['column'];      
-        member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
-    });  
-  });
+    var members = [];
     
-  var content =JSON.stringify(members);
-  Logger.log(content);
-//  var output = ContentService.createTextOutput(content);
-//  output.setMimeType(ContentService.MimeType.JSON);
-//  return output;
-  
-  // 出演ごと
-  if ( e.parameter['entry_name'] != '')
-  {
-    var temp = HtmlService.createTemplateFromFile('entry'); 
+    for ( var i =0; i < num_rows; ++i )
+    {
+        member = {};
+        name = range.getValues()[i][0];
+        if (name == ''){ continue; }
+        member['name'] = name;
+        member['row'] = range.getRowIndex() + i; 
+        members.push(member);
+    }
     
-    entries.forEach( function(entry){
-        if (entry['name'] === e.parameter['entry_name']){
-            entry.members = [];
-            
-            members.forEach(function(member){
-                var member_name = member['name'];
-                var member_response;
-                
-                member['attendances'].forEach(function(attendance){
-                    if ( attendance['entry_name'] == entry['name'] )
-                    {
-                        member_response = attendance['response'];                      
-                    }
-                });
-                
-                entry.members.push({name: member_name, response: member_response } );
-            }); 
-            temp.data = entry;           
-        }
-    });       
-    Logger.log(temp);
-    return temp.evaluate();    
-  }
-  
-  // メンバーごと
-  if ( e.parameter['member_name'])
-  {
-     var temp = HtmlService.createTemplateFromFile('member');  
-     members.forEach( function(member){
-     if (member['name'] === e.parameter['member_name']){
-      temp.data = member;
-     }});
-     return temp.evaluate(); 
-  }  
+    
+    var entries =[];
+    
+    var entries_range = sheet.getRange('D2:K4');
+    var entries_num = entries_range.getNumColumns();
+    for ( var i = 0; i < entries_num; ++i )
+    {
+        var entry = {};
+        entry['name'] = entries_range.getValues()[2][i];
+        entry['column'] = entries_range.getColumn() + i;
+        entry['date'] = entries_range.getValues()[0][i]
+        entries.push(entry);
+    }
+    Logger.log(entries);
+    
+    
+    members.forEach(function(member){
+        member['attendances'] = [];
+        entries.forEach(function(entry){
+            var r = member['row'];
+            var c = entry['column'];      
+            member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
+        });  
+    });
+    
+    var entry = entries[n];
+    entry.members = [];
+    members.forEach(function(member){
+        var member_name = member['name'];
+        var member_response;
+        
+        member['attendances'].forEach(function(attendance){
+            if ( attendance['entry_name'] == entry['name'] )             
+            {    
+                member_response = attendance['response'];                      
+            }
+        });            
+        entry.members.push({name: member_name, response: member_response } );
+    }); 
+    return entry;
 }
