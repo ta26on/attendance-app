@@ -7,8 +7,10 @@
         onLoad();
     });
     
-    function doAction(n){
-        google.script.run.withSuccessHandler(onSuccess).getEntry(n);
+    function doAction(n)
+    {
+        const is_ordered = $('#check_is_ordered').prop("checked");
+        google.script.run.withSuccessHandler(onSuccess).getEntry(n, is_ordered);
     }
     
     function onSuccess(res)
@@ -49,7 +51,7 @@
                 const id = 'btn'+ index.toString();
                 $('.btn-area')
                 .append($(btn)
-                        .addClass('btn btn-primary')
+                        .addClass('btn btn-outline-primary')
                         .attr('id', id ));
                         
              $('.btn-area').on('click','button#'+id,function(e){ doAction(index);});

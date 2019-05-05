@@ -8,7 +8,6 @@ function getSpreadsheet()
 }
 
 function getSheetByName(ss, name)
-
 {
     return ss.getSheetByName(name);
 }
@@ -87,7 +86,7 @@ function getAllEntries()
     return entries;    
 }
 
-function getEntry(n)
+function getEntry(n, is_ordered)
 {  
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
     var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));   
@@ -127,7 +126,8 @@ function getEntry(n)
             member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
         });  
     });
- 
+  
+   
     var entry = entries[n];
     entry.members = [];
     members.forEach(function(member){
@@ -142,5 +142,11 @@ function getEntry(n)
         });            
         entry.members.push({name: member_name, response: member_response } );
     }); 
+  entry.members.sort(function(a,b){
+    if (a['response'] < b['response'] ){ return 1; }
+    if (a['response'] == b['response'] ){ return 0; }
+    return -1;
+  } );
+  Logger.log(entry);
     return entry;
 }
