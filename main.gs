@@ -134,7 +134,7 @@ function getEntry(n)
         var member_response;
         
         member['attendances'].forEach(function(attendance){
-            if ( attendance['entry_name'] == entry['name'] )             
+            if ( attendance['entry_date'] == entry['date'] &&  attendance['entry_name'] == entry['name'])             
             {    
                 member_response = attendance['response'];                      
             }
