@@ -83,13 +83,13 @@ function getAllEntries()
         entries.push(entry);
     }
 
-    return entries;    
+    return entries;
 }
 
-function getEntry(n, is_ordered)
+function getEntry(n)
 {  
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-    var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));   
+    var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));
     var range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('MEMBER_RANGE'));
     var num_rows = range.getNumRows();
     
@@ -127,7 +127,6 @@ function getEntry(n, is_ordered)
         });  
     });
   
-   
     var entry = entries[n];
     entry.members = [];
     members.forEach(function(member){
@@ -142,11 +141,13 @@ function getEntry(n, is_ordered)
         });            
         entry.members.push({name: member_name, response: member_response } );
     }); 
-  entry.members.sort(function(a,b){
-    if (a['response'] < b['response'] ){ return 1; }
-    if (a['response'] == b['response'] ){ return 0; }
-    return -1;
-  } );
-  Logger.log(entry);
+
+    // sort して返す
+    entry.members.sort(function(a,b){
+      if (a['response'] < b['response'] ){ return 1; }
+      if (a['response'] == b['response'] ){ return 0; }
+      return -1;
+   });
+
     return entry;
 }

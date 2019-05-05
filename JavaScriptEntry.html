@@ -10,7 +10,7 @@
     function doAction(n)
     {
         const is_ordered = $('#check_is_ordered').prop("checked");
-        google.script.run.withSuccessHandler(onSuccess).getEntry(n, is_ordered);
+        google.script.run.withSuccessHandler(onSuccess).getEntry(n);
     }
     
     function onSuccess(res)
@@ -18,44 +18,48 @@
         updateContent(res);
     }
     
+    function table_style(response)
+    {
+        if ( response.match(/○/) ){ return 'table-success'; }
+        if ( response.match(/△/) ){ return 'table-warning'; } 
+        if ( response.match(/×/) ){ return 'table-secondary'; }
+        return 'table-light';
+    }
+    
+    
     function updateContent(entry)
     {
         $('#title').html(entry['date'] + ': ' + entry['name']);
-        
-        const is_ok = $('#check_ok_only').prop("checked");
-        
         var list = $('#table');
         list.empty();
         
         entry.members.forEach(function(member){
-            if (!is_ok || member['response'].match(/○/)){
-                list.append('<tr>'
-                    +'<td>'+ member['name'] +'</td>'
-                    +'<td>'+ member['response'] +'</td>'
-                    +'</tr>');
-                }
-            });
-        }
-
-        function onLoad()
-        {
-            google.script.run.withSuccessHandler(onSuccessLoad).getAllEntries();
-        }
-
-        function onSuccessLoad(res)
-        {
-            const entries = res;
-
-            entries.forEach(function(entry,index){
-                var btn = '<button>' + entry['date'] + ': ' + entry['name'] +'</button>';
-                const id = 'btn'+ index.toString();
-                $('.btn-area')
-                .append($(btn)
-                        .addClass('btn btn-outline-primary')
-                        .attr('id', id ));
-                        
-             $('.btn-area').on('click','button#'+id,function(e){ doAction(index);});
+            list.append( $('<tr></tr>').addClass(table_style(member['response']))
+            .append($('<td></td>').append(member['name']))
+            .append($('<td></td>').append(member['response']))
+            );
+        });
+    }
+    
+    function onLoad()
+    {
+        google.script.run.withSuccessHandler(onSuccessLoad).getAllEntries();
+    }
+    
+    function onSuccessLoad(res)
+    {
+        const entries = res;
+        
+        entries.forEach(function(entry,index){
+            var btn = '<button>' + entry['date'] + ': ' + entry['name'] +'</button>';
+            const id = 'btn'+ index.toString();
+            $('.btn-area')
+            .append($(btn)
+            .addClass('btn btn-outline-primary')
+            .attr('id', id ));
             
-            });
-        }
-    </script>
+            $('.btn-area').on('click','button#'+id,function(e){ doAction(index);});
+            
+        });
+    }
+</script>
