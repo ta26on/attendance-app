@@ -44,9 +44,16 @@
         {
             const entries = res;
 
-            entries.forEach(function(entry){
+            entries.forEach(function(entry,index){
                 var btn = '<button>' + entry['date'] + ': ' + entry['name'] +'</button>';
-                $('.btn-area').append(btn);
+                const id = 'btn'+ index.toString();
+                $('.btn-area')
+                .append($(btn)
+                        .addClass('btn btn-primary')
+                        .attr('id', id ));
+                        
+             $('.btn-area').on('click','button#'+id,function(e){ doAction(index);});
+            
             });
         }
     </script>

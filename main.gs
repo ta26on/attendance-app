@@ -71,9 +71,7 @@ function getMember(n)
 function getAllEntries()
 {
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-    var sheet = ss.getSheetByName('鳴り物');
-    var num_rows = range.getNumRows();
-            
+    var sheet = ss.getSheetByName('鳴り物');         
     var entries =[];
     
     var entries_range = sheet.getRange('D2:K4');
