@@ -16,8 +16,8 @@ function getSheetByName(ss, name)
 function doGet(e)
 {
     var page = 'entry';
-    if (e.parameter['member'] != ''){ page = 'member';}
-    Logger.log(e);
+    if (e.parameter != undefined && e.parameter.page != undefined){ page = e.parameter.page; }
+ //   Logger.log(e);
     return HtmlService.createTemplateFromFile(page).evaluate();
 }
 
@@ -26,12 +26,11 @@ function test_getMember()
   getMember(0);
 }
                        
-
 function getMember(n)
 {
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-    var sheet = ss.getSheetByName('鳴り物');   
-    var range = sheet.getRange('A7:A37');
+    var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));   
+    var range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('MEMBER_RANGE'));
     var num_rows = range.getNumRows();
     
     var members = [];
@@ -45,7 +44,7 @@ function getMember(n)
   
     var entries = [];
     
-    var entries_range = sheet.getRange('D2:K4');
+    var entries_range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('ENTRY_RANGE'));
     var entries_num = entries_range.getNumColumns();
     for ( var i = 0; i < entries_num; ++i )
     {
@@ -71,10 +70,10 @@ function getMember(n)
 function getAllEntries()
 {
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-    var sheet = ss.getSheetByName('鳴り物');         
+    var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));   
     var entries =[];
     
-    var entries_range = sheet.getRange('D2:K4');
+    var entries_range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('ENTRY_RANGE'));
     var entries_num = entries_range.getNumColumns();
     for ( var i = 0; i < entries_num; ++i )
     {
@@ -91,8 +90,8 @@ function getAllEntries()
 function getEntry(n)
 {  
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-    var sheet = ss.getSheetByName('鳴り物');
-    var range = sheet.getRange('A7:A37');
+    var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));   
+    var range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('MEMBER_RANGE'));
     var num_rows = range.getNumRows();
     
     var members = [];
@@ -109,7 +108,7 @@ function getEntry(n)
         
     var entries =[];
     
-    var entries_range = sheet.getRange('D2:K4');
+    var entries_range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('ENTRY_RANGE'));
     var entries_num = entries_range.getNumColumns();
     for ( var i = 0; i < entries_num; ++i )
     {
