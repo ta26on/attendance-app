@@ -29,11 +29,8 @@ function test_getMember()
 
 function getMember(n)
 {
-    Logger.log('getMember');
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
-    var sheet = ss.getSheetByName('鳴り物');
-    Logger.log(sheet.getName());
-    
+    var sheet = ss.getSheetByName('鳴り物');   
     var range = sheet.getRange('A7:A37');
     var num_rows = range.getNumRows();
     
@@ -45,7 +42,6 @@ function getMember(n)
         if (name == ''){ continue; }
         members.push({ name: name, row: (range.getRowIndex() + i) });
     }
-//    Logger.log(members);
   
     var entries = [];
     
@@ -59,13 +55,10 @@ function getMember(n)
         entry['date'] = entries_range.getValues()[0][i]
         entries.push(entry);
     }
-//    Logger.log("entries");
-//    Logger.log(entries);
     
     var target_member = members[n];
 
     target_member['attendances'] = [];
-      Logger.log('aaa');
     entries.forEach(function(entry){
         var r = target_member['row'];
         var c = entry['column'];      
@@ -79,8 +72,6 @@ function getEntry(n)
 {  
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
     var sheet = ss.getSheetByName('鳴り物');
-    //Logger.log(sheet.getName());
-    
     var range = sheet.getRange('A7:A37');
     var num_rows = range.getNumRows();
     
@@ -95,8 +86,7 @@ function getEntry(n)
         member['row'] = range.getRowIndex() + i; 
         members.push(member);
     }
-    
-    
+        
     var entries =[];
     
     var entries_range = sheet.getRange('D2:K4');
@@ -109,8 +99,6 @@ function getEntry(n)
         entry['date'] = entries_range.getValues()[0][i]
         entries.push(entry);
     }
-    Logger.log(entries);
-    
     
     members.forEach(function(member){
         member['attendances'] = [];
@@ -120,7 +108,7 @@ function getEntry(n)
             member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
         });  
     });
-    
+ 
     var entry = entries[n];
     entry.members = [];
     members.forEach(function(member){
