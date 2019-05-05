@@ -68,6 +68,28 @@ function getMember(n)
     return target_member;
 }
 
+function getAllEntries()
+{
+    var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
+    var sheet = ss.getSheetByName('鳴り物');
+    var num_rows = range.getNumRows();
+            
+    var entries =[];
+    
+    var entries_range = sheet.getRange('D2:K4');
+    var entries_num = entries_range.getNumColumns();
+    for ( var i = 0; i < entries_num; ++i )
+    {
+        var entry = {};
+        entry['name'] = entries_range.getValues()[2][i];
+        entry['column'] = entries_range.getColumn() + i;
+        entry['date'] = entries_range.getValues()[0][i]
+        entries.push(entry);
+    }
+
+    return entries;    
+}
+
 function getEntry(n)
 {  
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
