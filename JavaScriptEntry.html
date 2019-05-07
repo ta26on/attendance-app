@@ -28,7 +28,7 @@
     
     function member_url(url, member)
     {
-      return url + '?page=member&name=' + member['name'];      
+     return url + '?page=member&name=' + member['name'];      
     }
     
     function updateContent(entry)
@@ -37,8 +37,8 @@
         var list = $('#table');
         list.empty();
         list.append($('<tr></tr>')
-        .append($('<th></th>').append( $('<div></div>').addClass('text-right').append('名前')))
-        .append($('<th></th>').append('出欠')));
+        .append($('<th></th>').attr('scope',"col").append( $('<div></div>').addClass('text-right').append('名前')))
+        .append($('<th></th>').attr('scope',"col").append('出欠')));
         
         entry.members.forEach(function(member){
             list.append( $('<tr></tr>').addClass(table_style(member['response']))
