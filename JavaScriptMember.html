@@ -4,7 +4,7 @@
 <script>
     // The code in this function runs when the page is loaded.
     $(function() {
-        doAction(0);
+        //doAction(0);
     });
     
     function doAction(n){
@@ -25,9 +25,7 @@
     }
     
     function updateContent(member)
-    {
-        $('#title').html(member['name']);
-        
+    {        
         var table = $('#table');
         table.empty();
         
@@ -42,5 +40,10 @@
             .append(attendance['response']))
             );
         });
+    }
+    
+    function onLoadAction(data)
+    {
+       google.script.run.withSuccessHandler(onSuccess).getMemberByName(data);
     }
 </script>

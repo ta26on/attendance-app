@@ -7,7 +7,13 @@
 </head>
 <body>
     <?!= include('JavaScriptMember'); ?>
-    <h1 id='title' class="display-1"></h1>
-    <table class='table table_sm' id='table'></table>
+    <h1 class='display-1'><?= data ?></h1>
+    <table class='table table_sm' id='table'></table>   
+    <script>
+    window.addEventListener('DOMContentLoaded', function() 
+    {
+       onLoadAction(<?= data ?>);
+    });
+</script>
 </body>
 </html>

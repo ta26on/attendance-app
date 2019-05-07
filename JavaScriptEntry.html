@@ -26,6 +26,10 @@
         return 'table-light';
     }
     
+    function member_url(url, member)
+    {
+      return url + '?page=member&name=' + member['name'];      
+    }
     
     function updateContent(entry)
     {
@@ -38,7 +42,7 @@
         
         entry.members.forEach(function(member){
             list.append( $('<tr></tr>').addClass(table_style(member['response']))
-            .append($('<td></td>').append( $('<div></div>').addClass('text-right').append(member['name'])))
+            .append($('<td></td>').append( $('<div></div>').addClass('text-right').append($('<a>').attr('href', member_url(entry['url'],member)).append(member['name']))))
             .append($('<td></td>').append(member['response']))
             );
         });
