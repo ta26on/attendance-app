@@ -22,7 +22,8 @@ function doGet(e)
   if (e.parameter != undefined && e.parameter.page == 'member' && e.parameter.name != undefined){
     temp.data = e.parameter.name;
   }
-    return temp.evaluate();
+    return temp.evaluate()
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
 function test_getMember()
