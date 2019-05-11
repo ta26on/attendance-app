@@ -30,24 +30,29 @@ function test_getMember()
 {
   getMember(0);
 }
+                      
+//HYPERLINK("http://www.google.com", "Google") から１つめの””で囲まれたものを取得
+function getUrlFromFormula(formula)
+{
+  return /"(.*?)"/.exec(formula)[1];
+}
 
 function getMemberByName(member_name)
 {
-  Logger.log('getMemberByName(' + member_name + ')');
+    Logger.log('getMemberByName(' + member_name + ')');
+ 
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID'));
     var sheet = ss.getSheetByName(PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));   
     var range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('MEMBER_RANGE'));
     var num_rows = range.getNumRows();
     
     var members = [];
-    
     for ( var i =0; i < num_rows; ++i )
     {
         name = range.getValues()[i][0];
         if (name == ''){ continue; }
-        members.push({ name: name, row: (range.getRowIndex() + i) });
+        members.push({ name: name, row: (range.getRowIndex() + i) });      
     }
-  
     var entries = [];
     
     var entries_range = sheet.getRange(PropertiesService.getScriptProperties().getProperty('ENTRY_RANGE'));
@@ -57,7 +62,8 @@ function getMemberByName(member_name)
         var entry = {};
         entry['name'] = entries_range.getValues()[2][i];
         entry['column'] = entries_range.getColumn() + i;
-        entry['date'] = entries_range.getValues()[0][i]
+        entry['date'] = entries_range.getValues()[0][i];
+        entry['url'] = getUrlFromFormula(entries_range.getFormulasR1C1()[2][i]);
         entries.push(entry);
     }
     
@@ -75,9 +81,14 @@ function getMemberByName(member_name)
     entries.forEach(function(entry){
         var r = target_member['row'];
         var c = entry['column'];      
-        target_member['attendances'].push({ entry_name: entry['name'], entry_date: entry['date'], response: sheet.getRange(r,c).getValue()});
+        target_member['attendances'].push(
+          { entry_name: entry['name'], 
+            entry_date: entry['date'], 
+            entry_url: entry['url'],
+            response: sheet.getRange(r,c).getValue()            
+          });
     });  
-    
+    Logger.log(target_member);
     return target_member;
 }
                        
@@ -170,7 +181,7 @@ function getEntry(n)
         var entry = {};
         entry['name'] = entries_range.getValues()[2][i];
         entry['column'] = entries_range.getColumn() + i;
-        entry['date'] = entries_range.getValues()[0][i]
+        entry['date'] = entries_range.getValues()[0][i];
         entries.push(entry);
     }
     

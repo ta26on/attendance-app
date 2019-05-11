@@ -25,23 +25,20 @@
     }
     
     function updateContent(member)
-    {        
+    {
         var table = $('#table');
         table.empty();
         
         member['attendances'].forEach(function(attendance){      
             table.append( $('<tr></tr>')
             .addClass(table_class(attendance['response']))
-            .append( $('<td></td>')
-            .append( attendance['entry_date'] ))
-            .append( $('<td></td>')
-            .append(attendance['entry_name'] ))
-            .append(  $('<td></td>')
-            .append(attendance['response']))
+            .append( $('<td></td>').append( attendance['entry_date'] ))
+            .append( $('<td></td>').append( $('<a>').attr('href', attendance['entry_url'] ).append(attendance['entry_name'] )))
+            .append( $('<td></td>').append( attendance['response'] ))
             );
         });
     }
-    
+
     function onLoadAction(data)
     {
        google.script.run.withSuccessHandler(onSuccess).getMemberByName(data);
